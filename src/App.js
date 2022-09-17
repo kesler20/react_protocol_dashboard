@@ -19,6 +19,8 @@ import Logo from "../src/assets/Logo.png";
 import { links, googleLinks, SiteTitle } from "./data/links";
 import { BrowserRouter, Link } from "react-router-dom";
 import Pages from "./pages/Pages";
+import SearchBar from "material-ui-search-bar";
+// *snip*
 
 const drawerWidth = 240;
 
@@ -116,11 +118,15 @@ export default function MiniDrawer() {
           >
             <MenuIcon />
           </IconButton>
-
-          <div className="flex justify-around align-center w-full">
-            <img src={Logo} alt={""} style={{ width: "50px" }} />
+          <div className="flex justify-start align-center">
+            <img src={Logo} alt={""} style={{ width: "80px" }} />
             <SiteTitle>sofiaAPI</SiteTitle>
-            <p>version : {process.env.REACT_APP_VERSION}</p>
+          </div>
+          <div className="flex justify-center align-center w-full">
+            <SearchBar
+              onChange={(e) => console.log(e)}
+              onRequestSearch={(e) => console.log(e)}
+            />
           </div>
         </Toolbar>
       </AppBar>

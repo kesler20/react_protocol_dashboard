@@ -34,4 +34,6 @@ export const SiteTitle = styled.h2`
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
   background-clip: text;
+  font-size: 2rem;
+  font-weight: 700;
 `

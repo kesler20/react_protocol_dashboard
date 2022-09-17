@@ -25,8 +25,9 @@ export default class RESTfulApiInterface {
    * @param {*} jwtToken - the jwtToken is the authentification token which is taken from local storage
    * @param {*} activateTestMode - this is the boolean used for testing
    * @param {*} customEndpoints - this is a boolean which can be set to true to use personalised endpoint
+   * @param {*} verboseMode - this will console log the response when set to true 
    */
-  constructor(baseUrl, customEndpoints, activateTestMode) {
+  constructor(baseUrl, customEndpoints, activateTestMode, verboseMode) {
     this.baseUrl =
       baseUrl === undefined
         ? `${process.env.REACT_APP_BACKEND_URL_DEV}`
@@ -35,6 +36,7 @@ export default class RESTfulApiInterface {
       activateTestMode === undefined ? false : activateTestMode;
     this.customEndpoints =
       customEndpoints === undefined ? true : customEndpoints;
+      this.verboseMode === undefined ? false : verboseMode
   }
 
   /**
@@ -55,7 +57,7 @@ export default class RESTfulApiInterface {
         })
         .then((res) => {
           response.resource = res;
-          let _ = this.activateTestMode
+          let _ = this.verboseMode
             ? ""
             : console.log(`${method} ${URL} backend response`, res);
         });
@@ -64,7 +66,7 @@ export default class RESTfulApiInterface {
         method: method,
         body: JSON.stringify(body),
       }).then((res) => {
-        let _ = this.activateTestMode
+        let _ = this.verboseMode
           ? ""
           : console.log(`${method} ${URL} backend response`, res);
         response.statusCode = res.status;
