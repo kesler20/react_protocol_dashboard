@@ -2,27 +2,30 @@ import React, { useEffect } from "react";
 import Knobs from "../components/knob/knob";
 import CustomizedSlider from "../components/slider/Slider";
 import CustomizedSwitches from "../components/switch/IosSwitch";
-import RESTfulApiInterface from "../API/RESTfulApi"
-import PlotlyInterface from "../API/PlotlyInterface"
+import RESTfulApiInterface from "../API/RESTfulApi";
+import PlotlyInterface from "../API/PlotlyInterface";
 const Home = () => {
   useEffect(() => {
-    const api = new RESTfulApiInterface("https://api.github.com/","",false)
-    api.getResource("").then(res => console.log(res))
+    const api = new RESTfulApiInterface("https://api.github.com/", "", false);
+    api.getResource("").then((res) => console.log(res));
+
+    const dbApi = new RESTfulApiInterface(
+      "http://127.0.0.1:8000/sofia-api/workout",
+      "",
+      false
+    );
+
+    let backendData = [];
+    dbApi.getResource("").then((res) => {
+      backendData = JSON.parse(res.resource)
+    });
+
+    let columns = Object.keys(backendData)
+    // assuming that each column has the same rows
+    let rows = Object.keys(columns[0]) 
+
+
     const plotly = new PlotlyInterface("plot");
-
-    const trace1 = {
-      x: [1, 2, 3, 4],
-      y: [10, 15, 13, 17],
-      type: "scatter",
-    };
-
-    const trace2 = {
-      x: [1, 2, 3, 4],
-      y: [16, 5, 11, 9],
-      type: "scatter",
-    };
-
-    const data = [trace1, trace2];
 
     plotly.constructInitialPlot(data);
   });
