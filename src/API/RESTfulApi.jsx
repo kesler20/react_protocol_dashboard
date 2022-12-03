@@ -1,4 +1,4 @@
-import testFetch from "../__test__/test_fetch";
+// import testFetch from "../__tests__/test_fetch";
 /**
  * This is an implementation of a RESTful Api using the fetch api
  *
@@ -19,80 +19,102 @@ import testFetch from "../__test__/test_fetch";
  *
  * @see https://en.wikipedia.org/wiki/List_of_HTTP_status_codes for more information
  */
-export default class RESTfulApiInterface {
-  /**
-   * @param {*} baseUrl - the base url refers to the URL of the backend
-   * @param {*} jwtToken - the jwtToken is the authentification token which is taken from local storage
-   * @param {*} activateTestMode - this is the boolean used for testing
-   * @param {*} customEndpoints - this is a boolean which can be set to true to use personalised endpoint
-   * @param {*} verboseMode - this will console log the response when set to true 
-   */
-  constructor(baseUrl, customEndpoints, activateTestMode, verboseMode) {
-    this.baseUrl =
-      baseUrl === undefined
-        ? `${process.env.REACT_APP_BACKEND_URL_DEV}`
-        : baseUrl;
-    this.activateTestMode =
-      activateTestMode === undefined ? false : activateTestMode;
-    this.customEndpoints =
-      customEndpoints === undefined ? true : customEndpoints;
-      this.verboseMode === undefined ? false : verboseMode
+ export default class RESTfulApiInterface {
+  constructor() {
+    this.baseUrl = `${process.env.REACT_APP_BACKEND_URL_PROD}`;
+    this.jwtToken = "Bearer " + localStorage.getItem("jwtToken");
+    this.activateTestMode = false;
   }
 
   /**
-   * This is a method for sending http requests
-   *
+   * This is an internal method used for sending http requests
    * @param {*} URL - the url to call the request to in the form ``this.baseUrl}/resourceEndpoint/METHOD``
    * @param {*} method - an HTTP method such as ["GET", "POST"]
    * @param {*} body - has to be a stringified serializable JSON string, use ``JSON.stringify(param)``
+   * @returns response - an object returned by the backend
    */
-  async HTTPcall(URL, method, body) {
-    let response = {};
-    const HTTPRequest = this.activateTestMode ? testFetch : fetch;
-    if (body === undefined) {
-      await HTTPRequest(URL, { method: method })
+  HTTPcall = async (URL, method, body) => {
+    if (body == undefined) {
+      return await fetch(URL, {
+        headers: new Headers({
+          "X-JWT": this.jwtToken,
+        }),
+        method,
+      })
         .then((res) => {
-          response.statusCode = res.status;
-          return res.json();
+          if (!res.ok) {
+            console.log(URL, method, res);
+            return [];
+          } else {
+            try {
+              return res
+                .json()
+                .then((res) => {
+                  try{
+                    return JSON.parse(res).response
+                  } catch(e) {
+                    console.log(e)
+                    return res.response
+                  }
+                })
+                .catch((e) => {
+                  console.log(`error from calling ${[URL, method]}`, e);
+                  console.log("response:", res);
+                  return [];
+                });
+            } catch (e) {
+              console.log(`error from calling ${[URL, method]}`, e);
+              console.log("response:", res);
+              return [];
+            }
+          }
         })
-        .then((res) => {
-          response.resource = res;
-          let _ = this.verboseMode
-            ? ""
-            : console.log(`${method} ${URL} backend response`, res);
+        .catch((e) => {
+          console.log(`first to resolve the first promise ${[URL, method]}`, e);
+          return [];
         });
     } else {
-      await HTTPRequest(URL, {
-        method: method,
+      return await fetch(URL, {
+        headers: new Headers({
+          "X-JWT": this.jwtToken,
+        }),
+        method,
         body: JSON.stringify(body),
-      }).then((res) => {
-        let _ = this.verboseMode
-          ? ""
-          : console.log(`${method} ${URL} backend response`, res);
-        response.statusCode = res.status;
-      });
+      })
+        .then((res) => {
+          if (!res.ok) {
+            console.log(URL, method, res);
+            return [];
+          } else {
+            try {
+              return res
+                .json()
+                .then((res) => {
+                  try{
+                    return JSON.parse(res).response
+                  } catch(e) {
+                    console.log(e)
+                    return res.response
+                  }
+                })
+                .catch((e) => {
+                  console.log(`error from calling ${[URL, method]}`, e);
+                  console.log("response:", res);
+                  return [];
+                });
+            } catch (e) {
+              console.log(`error from calling ${[URL, method]}`, e);
+              console.log("response:", res);
+              return [];
+            }
+          }
+        })
+        .catch((e) => {
+          console.log(`first to resolve the first promise ${[URL, method]}`, e);
+          return [];
+        });
     }
-    return response;
-  }
-
-  /**
-   * This is an auxiliary function used to enable the use of third party API's by passing
-   * "" as the resourceEndpoint
-   *
-   * @param {*} resourceEndpoint - the enpoint of the base url
-   * @param {*} HTTPmethod - the method that wants to be called on the customed endpoint
-   *
-   * @returns - baseUrl/resourceEndpoint
-   */
-  constructUrl(resourceEndpoint, HTTPmethod) {
-    if (resourceEndpoint === "" || undefined) {
-      return `${this.baseUrl}`;
-    } else {
-      return `${this.baseUrl}/${resourceEndpoint}/${
-        this.customEndpoints ? HTTPmethod : ""
-      }`;
-    }
-  }
+  };
 
   /**
    * This will send an HTTP PUT request to the ``baseUrl/resourceEndpoint/CREATE`` endpoint
@@ -119,13 +141,13 @@ export default class RESTfulApiInterface {
    * @see https://stackoverflow.com/questions/630453/what-is-the-difference-between-post-and-put-in-http
    * for more information
    */
-  async putResource(resourceEndpoint, resource) {
+  putResource = async (resourceEndpoint, resource) => {
     return this.HTTPcall(
-      this.constructUrl(resourceEndpoint, "POST"),
-      "POST",
+      `${this.baseUrl}/${resourceEndpoint}/WRITE`,
+      "PUT",
       resource
     );
-  }
+  };
 
   /**
    * This will send an HTTP GET request to the ``baseUrl/resourceEndpoint/READ`` endpoint
@@ -141,9 +163,12 @@ export default class RESTfulApiInterface {
    *  - to access the data within the response use .then(res => store(res)) on the response
    * - the status code is a value of the key statusCode
    */
-  async getResource(resourceEndpoint) {
-    return this.HTTPcall(this.constructUrl(resourceEndpoint, "GET"), "GET");
-  }
+  getResource = async (resourceEndpoint) => {
+    return await this.HTTPcall(
+      `${this.baseUrl}/${resourceEndpoint}/READ`,
+      "GET"
+    );
+  };
 
   /**
    * This will send an HTTP GET request to the ``baseUrl/resourceEndpoint/READ`` endpoint
@@ -161,11 +186,11 @@ export default class RESTfulApiInterface {
    * - to access the data within the response use .then(res => store(res)) on the response
    * - the status code is a value of the key statusCode
    */
-  async deleteResource(resourceEndpoint, resourceKey) {
+  deleteResource = async (resourceEndpoint, resourceKey) => {
     return this.HTTPcall(
-      this.constructUrl(resourceEndpoint, "DELETE"),
+      `${this.baseUrl}/${resourceEndpoint}/DELETE`,
       "DELETE",
       resourceKey
     );
-  }
+  };
 }
