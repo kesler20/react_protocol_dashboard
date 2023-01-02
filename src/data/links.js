@@ -9,19 +9,21 @@ import Gmail from "../assets/gmail_icon.jpg"
 import Youtube from "../assets/youtube_icon.png"
 import styled from 'styled-components';
 
+const iconWidth = "32px"
+
 export const links = [
-    { name : "Monzo", icon : <img style={{width : "25px"}} src={Monzo} />},
-    { name : "The Gym Group", icon : <img style={{width : "25px"}} src={TheGymGroup} />},
-    { name : "Github", icon : <img style={{width : "25px"}} src={Github} />},
-    { name : "Sofia Diet", icon : <img style={{width : "25px", borderRadius: "50%"}} src={SofiaDiet} />},
+    { name : "Monzo", icon : <img style={{width : iconWidth}} src={Monzo} />},
+    { name : "The Gym Group", icon : <img style={{width : iconWidth}} src={TheGymGroup} />},
+    { name : "Github", icon : <img style={{width : iconWidth}} src={Github} />},
+    { name : "Sofia Diet", icon : <img style={{width : iconWidth, borderRadius: "50%"}} src={SofiaDiet} />},
 ]
 
 export const googleLinks = [
-    { name : "Google Drive", icon : <img style={{width : "25px"}} src={GoogleDrive} />},
-    { name : "Google Tasks", icon : <img style={{width : "25px"}} src={GoogleTasks} />},
-    { name : "Google Calendar", icon : <img style={{width : "25px"}} src={GoogleCalendar} />},
-    { name : "Gmail", icon : <img style={{width : "25px"}} src={Gmail} />},
-    { name : "Youtube", icon : <img style={{width : "25px"}} src={Youtube} />},
+    { name : "Google Drive", icon : <img style={{width : iconWidth}} src={GoogleDrive} />},
+    { name : "Google Tasks", icon : <img style={{width : iconWidth}} src={GoogleTasks} />},
+    { name : "Google Calendar", icon : <img style={{width : "50px"}} src={GoogleCalendar} />},
+    { name : "Gmail", icon : <img style={{width : "50px"}} src={Gmail} />},
+    { name : "Youtube", icon : <img style={{width : iconWidth}} src={Youtube} />},
 ]
 
 export const SiteTitle = styled.h2`

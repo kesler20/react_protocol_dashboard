@@ -2,6 +2,10 @@ import os
 import shutil
 import platform
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> a5e4cd2667a5e0ad7d33974affcb0ea283409aa1
 class File(object):
     '''Object Description'''
 
@@ -44,6 +48,10 @@ class File(object):
         '''signature description'''
         os.remove(self.filename)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> a5e4cd2667a5e0ad7d33974affcb0ea283409aa1
 class OperatingSystemInterface(object):
     '''
     you can access the interface like a resource manager such as
@@ -77,8 +85,13 @@ class OperatingSystemInterface(object):
         else:
             root_path = os.path.join(*os.path.dirname(
                 __file__).split(r"\ ".replace(" ", ""))[:3])
+<<<<<<< HEAD
         
         root_path = root_path.replace(":",r":\ ".replace(" ",""))
+=======
+
+        root_path = root_path.replace(":", r":\ ".replace(" ", ""))
+>>>>>>> a5e4cd2667a5e0ad7d33974affcb0ea283409aa1
         print(root_path)
         return root_path
 
@@ -89,7 +102,12 @@ class OperatingSystemInterface(object):
         the file which will be replace in the local directory has path ``os.path.join(self.directory,file)``
         '''
 
+<<<<<<< HEAD
         source = os.path.join(r"C:\Users\CBE-User 05\protocol", source_folder, file)
+=======
+        source = os.path.join(
+            r"C:\Users\Uchek\protocol", source_folder, file)
+>>>>>>> a5e4cd2667a5e0ad7d33974affcb0ea283409aa1
         destination = os.path.join(self.directory, file)
 
         print(r'''
@@ -120,6 +138,7 @@ class OperatingSystemInterface(object):
 
         return result
 
+<<<<<<< HEAD
 def synchronize_os_interface_workflow_git():
     # now you can push all of the changes to github within the protocol folder as follows
     for dir in os.listdir(r"C:\Users\CBE-User 05\protocol"):
@@ -141,3 +160,7 @@ def synchronize_os_interface_workflow_git():
 
 if __name__ == "__main__":
     synchronize_os_interface_workflow_git()
+=======
+
+
+>>>>>>> a5e4cd2667a5e0ad7d33974affcb0ea283409aa1
